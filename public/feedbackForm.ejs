@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feedback Form</title>
+    <link rel="stylesheet" href="feedback.css">
+  </head>
+  <!-- <style>
+    table,
+    th,
+    td {
+      border: 1px solid black;
+    }
+  </style> -->
+  <body>
+    <div class="front">
+     <img src="https://www.tcs.com/content/dam/global-tcs/en/images/home/tcs-logo-1.svg" alt="tcs logo" class="image2">
+   </div>
+   <div class="container">
+    <h1>SM Feedback Form</h1>
+    <!-- Display squad details -->
+    <div class="squad-details">
+        <div class="left">
+           <p><strong>Offshore Squad Lead:</strong> <%= squadDetails.offshoreSquadLead %></p>
+           <p><strong>Onsite Squad Lead:</strong> <%= squadDetails.onsiteSquadLead %></p>
+        </div>
+        <div class="right">
+            <p><strong>Squad Name:</strong> <%= squadDetails.squadName %></p>
+            <p><strong>Scrum Master:</strong> <%= squadDetails.scrumMaster %></p>
+        </div>
+    </div>
+    <div class="feedbackform">
+    <form name="feedbackform" action="/submit-feedback" method="post">
+      <table>
+        <tr>
+          <th style="background-color: whitesmoke">Attributes</th>
+          <th style="background-color: whitesmoke" class="required-field">Feedback</th>
+          <th style="background-color: whitesmoke">Remarks</th>
+        </tr>
+        <tr>
+          <label for="technicalFeedback"
+            ><td style="background-color: lightblue">
+              Technical Knowledge
+            </td></label
+          >
+          <td>
+            <select id="technicalFeedback" name="technicalFeedback">
+              <option value="">Select</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Need Improvement">Need Improvement</option>
+            </select>
+          </td>
+          <td>
+            <label for="technicalFeedbackRemarks"></label>
+            <textarea
+              id="technicalFeedbackRemarks"
+              rows="1"
+              cols="1"name="technicalFeedbackRemarks"
+              class="limited"
+            ></textarea>
+            <small>Characters remaining: 800</smallmall>  
+          </td>
+        </tr>
+        <tr>
+          <label for="domainFeedback"
+            ><td style="background-color: lightblue">
+              Domain Knowledge
+            </td></label
+          >
+          <td>
+            <select id="domainFeedback" name="domainFeedback" >
+              <option value="">Select</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Need Improvement">Need Improvement</option>
+            </select>
+          </td>
+          <td>
+            <label for="domainFeedbackRemarks"></label>
+
+            <textarea
+              id="domainFeedbackRemarks"
+              name="domainFeedbackRemarks"
+              rows="1"
+              cols="1"
+              class="limited"
+            ></textarea>
+            <small>Characters remaining: 800</small>
+          </td>
+        </tr>
+        <tr>
+          <label for="activeParticipationFeedback"
+            ><td style="background-color: lightblue">
+              Active Participation in Agile Ceremonies
+            </td></label
+          >
+          <td>
+            <select
+              id="activeParticipationFeedback"
+              name="activeParticipationFeedback"
+            > <option value="">Select</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Need Improvement">Need Improvement</option>
+            </select>
+          </td>
+          <td>
+            <label for="activeParticipationFeedbackRemarks"></label>
+
+            <textarea
+              id="activeParticipationFeedbackRemarks"
+              name="activeParticipationFeedbackRemarks"
+              rows="1"
+              cols="1"
+              class="limited"
+            ></textarea>
+            <small>Characters remaining: 800</small>
+          </td>
+        </tr>
+        <tr>
+          <label for="ResponsivenesstouserFeedback "
+            ><td style="background-color: lightblue">
+              Responsiveness to user queries/Clarification
+            </td></label
+          >
+          <td>
+            <select
+              id="ResponsivenesstouserFeedback"
+              name="ResponsivenesstouserFeedback"
+            > <option value="">Select</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Need Improvement">Need Improvement</option>
+            </select>
+          </td>
+          <td>
+            <label for="ResponsivenesstouserFeedbackRemarks"></label>
+
+            <textarea
+              id="ResponsivenesstouserFeedbackRemarks"
+              name="ResponsivenesstouserFeedbackRemarks"
+              rows="1"
+              cols="1"
+              class="limited"
+            ></textarea>
+            <small>Characters remaining: 800</small>
+          </td>
+        </tr>
+        <tr>
+          <label for="qualityOfDeliverablesFeedback"
+            ><td style="background-color: lightblue">
+              Quality of Deliverables
+            </td></label
+          >
+          <td>
+            <!-- <select
+              id="qualityOfDeliverablesFeedback"
+              name="qualityOfDeliverablesFeedback"
+            > 
+            <option value="">Select</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Need Improvement">Need Improvement</option>
+            </select> -->
+          </td>
+          <td style="height: 50px;">
+            <!-- <label for="remarks"></label>
+
+            <textarea
+              id="remarks"
+              name="remarks"
+              rows="1"
+              cols="1"
+              class="limited"
+            ></textarea>
+            <small>Characters remaining: 800</small> -->
+          </td>
+        </tr>
+        <tr>
+          <label for="solutioningQualityFeedback"
+            ><td align="right" style="background-color: lightblue">
+              -Solutioning Quality
+            </td></label
+          >
+          <td>
+            <select
+              id="solutioningQualityFeedback"
+              name="solutioningQualityFeedback"
+            > <option value="">Select</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Need Improvement">Need Improvement</option>
+            </select>
+          </td>
+          <td>
+            <label for="solutioningQualityFeedbackRemarks"></label>
+
+            <textarea
+              id="solutioningQualityFeedbackRemarks"
+              name="solutioningQualityFeedbackRemarks"
+              rows="1"
+              cols="1"
+              class="limited"
+            ></textarea>
+            <small>Characters remaining: 800</small>
+          </td>
+        </tr>
+        <tr>
+          <label for="documentationQualityFeedback"
+            ><td align="right" style="background-color: lightblue">
+              - Documentation Quality (Jira updates)
+            </td></label
+          >
+          <td>
+            <select
+              id="documentationQualityFeedback"
+              name="documentationQualityFeedback"
+            > <option value="">Select</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Need Improvement">Need Improvement</option>
+            </select>
+          </td>
+          <td>
+            <label for="documentationQualityFeedbackRemarks"></label>
+
+            <textarea
+              id="documentationQualityFeedbackRemarks"
+              name="documentationQualityFeedbackRemarks"
+              rows="1"
+              cols="1"
+              class="limited"
+            ></textarea>
+            <small>Characters remaining: 800</small>
+          </td>
+        </tr>
+        <tr>
+          <label for="testCoverageQualityFeedback"
+            ><td align="right" style="background-color: lightblue">
+              -Test Coverage Quality
+            </td></label
+          >
+          <td>
+            <select
+              id="testCoverageQualityFeedback"
+              name="testCoverageQualityFeedback"
+            > <option value="">Select</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Need Improvement">Need Improvement</option>
+            </select>
+          </td>
+          <td>
+            <label for="testCoverageQualityFeedbackRemarks"></label>
+
+            <textarea
+              id="testCoverageQualityFeedbackRemarks"
+              name="testCoverageQualityFeedbackRemarks"
+              rows="1"
+              cols="1"
+              class="limited"
+            ></textarea>
+            <small>Characters remaining: 800</small>
+          </td>
+        </tr>
+
+        <tr>
+          <label for="testingQualityFeedback"
+            ><td align="right" style="background-color: lightblue">
+              -Testing Quality
+            </td></label
+          >
+          <td>
+            <select id="testingQualityFeedback" name="testingQualityFeedback">
+              <option value="">Select</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Need Improvement">Need Improvement</option>
+            </select>
+          </td>
+          <td>
+            <label for="testingQualityFeedbackRemarks"></label>
+
+            <textarea
+              id="testingQualityFeedbackRemarks"
+              name="testingQualityFeedbackRemarks"
+              rows="1"
+              cols="1"
+              class="limited"
+            ></textarea>
+            <small>Characters remaining: 800</small>
+          </td>
+        </tr>
+        <tr>
+          <label for="postProductionIssuesDefectsFeedback"
+            ><td align="right" style="background-color: lightblue">
+              -Post Production Issues/Defects
+            </td></label
+          >
+          <td>
+            <select
+              id="postProductionIssuesDefectsFeedback"
+              name="postProductionIssuesDefectsFeedback"
+            > <option value="">Select</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Need Improvement">Need Improvement</option>
+            </select>
+          </td>
+          <td>
+            <label for="postProductionIssuesDefectsFeedbackRemarks"></label>
+
+            <textarea
+              id="postProductionIssuesDefectsFeedbackRemarks"
+              name="postProductionIssuesDefectsFeedbackRemarks"
+              rows="1"
+              cols="1"
+              class="limited"
+            ></textarea>
+            <small>Characters remaining: 800</small>
+          </td>
+        </tr>
+        <tr>
+          <label for="contributionbySquadLeadFeedback"
+            ><td style="background-color: lightblue">
+              Contribution by Squad Lead (Review effectiveness, Co-ordination,
+              Solutioning)
+            </td></label
+          >
+          <td>
+            <select
+              id="contributionbySquadLeadFeedback"
+              name="contributionbySquadLeadFeedback"
+            >
+              <option value="">Select</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Need Improvement">Need Improvement</option>
+            </select>
+          </td>
+          <td>
+            <label for="contributionbySquadLeadFeedbackRemarks"></label>
+
+            <textarea
+              id="contributionbySquadLeadFeedbackRemarks"
+              name="contributionbySquadLeadFeedbackRemarks"
+              rows="1"
+              cols="1"
+              class="limited"
+            ></textarea>
+            <small>Characters remaining: 800</small>
+          </td>
+        </tr>
+        <tr>
+          <label for="workasTeamFeedback"
+            ><td style="background-color: lightblue">
+              Work as a team to achieve Sprint Goal
+            </td></label
+          >
+          <td>
+            <select id="workasTeamFeedback" name="workasTeamFeedback">
+              <option value="">Select</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Need Improvement">Need Improvement</option>
+            </select>
+          </td>
+          <td>
+            <label for="workasTeamFeedbackRemarks"></label>
+
+            <textarea
+              id="workasTeamFeedbackRemarks"
+              name="workasTeamFeedbackRemarks"
+              rows="1"
+              cols="1"
+              class="limited"
+            ></textarea>
+            <small>Characters remaining: 800</small>
+          </td>
+        </tr>
+        <tr>
+          <label for="understandingFeedback"
+            ><td style="background-color: lightblue">
+              Understanding of Requirements to meet Business KPI
+            </td></label
+          >
+          <td>
+            <select id="understandingFeedback" name="understandingFeedback">
+              <option value="">Select</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Need Improvement">Need Improvement</option>
+            </select>
+          </td>
+          <td>
+            <label for="understandingFeedbackRemarks"></label>
+
+            <textarea
+              id="understandingFeedbackRemarks"
+              name="understandingFeedbackRemarks"
+              rows="1"
+              cols="1"
+              class="limited"
+            ></textarea>
+            <small>Characters remaining: 800</small>
+          </td>
+        </tr>
+        <tr>
+          <label for="communicationFeedback"
+            ><td style="background-color: lightblue">Communication</td></label
+          >
+          <td>
+            <select id="communicationFeedback" name="communicationFeedback">
+              <option value="">Select</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Need Improvement">Need Improvement</option>
+            </select>
+          </td>
+          <td>
+            <label for="communicationFeedbackRemarks"></label>
+
+            <textarea
+              id="communicationFeedbackRemarks"
+              name="communicationFeedbackRemarks"
+              rows="1"
+              cols="1"
+              class="limited"
+            ></textarea>
+            <small>Characters remaining: 800</small>
+          </td>
+        </tr>
+        <tr>
+          <label for="anyOtherCommentsFeedback"
+            ><td style="background-color: lightblue">
+              Any Other Comments
+            </td></label
+          >
+          <td></td>
+          <td>
+            <textarea name="anyOtherCommentsFeedback" id="anyOtherCommentsFeedback"></textarea>
+          </td>
+          <!-- <td>
+            <select
+              id="anyOtherCommentsFeedback"
+              name="anyOtherCommentsFeedback"
+            >
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Average">Average</option>
+              <option value="Need Improvement">Need Improvement</option>
+            </select>
+          </td> -->
+          <!-- <td>
+            <label for="remarks"></label>
+
+            <textarea
+              id="remarks"
+              name="remarks"
+              rows="1"
+              cols="1"
+              class="limited"
+            ></textarea>
+            <small>Characters remaining: 800</small>
+          </td> -->
+        </tr>
+      </table>
+
+      <!-- <label for="domainFeedback">Domain Knowledge</label>
+        <select id="domainFeedback" name="domainFeedback">
+            <option value="Excellent">Excellent</option>
+            <option value="Good">Good</option>
+            <option value="Average">Average</option>
+            <option value="Need Improvement">Need Improvement</option>
+        </select>
+        <br>
+        <label for="participationFeedback">Active Participation in Agile Ceremonies</label>
+        <select id="participationFeedback" name="participationFeedback">
+            <option value="Excellent">Excellent</option>
+            <option value="Good">Good</option>
+            <option value="Average">Average</option>
+            <option value="Need Improvement">Need Improvement</option>
+        </select>
+        <br> -->
+      <div class="button-container">
+        <button type="submit" style="background-color:#4CAF50; color: white;">Submit</button>
+      </div>
+      <div><p id="errorMessage" style="display: none; color: red;">Please fill in all mandatory fields.</p></div>
+     
+   
+  </div>
+  </div>
+  <script>
+    var textareas = document.querySelectorAll(".limited");
+
+    textareas.forEach(function (textarea) {
+      var maxLength = 800;
+      var charCount = textarea.nextElementSibling;
+
+      textarea.addEventListener("input", function () {
+        if (textarea.value.length > maxLength) {
+          textarea.value = textarea.value.substring(0, maxLength);
+        }
+        charCount.textContent =
+          "Characters remaining: " + (maxLength - textarea.value.length);
+      });
+    });
+    const form = document.querySelector("form");
+const errorMessage = document.getElementById("errorMessage"); // Get the error message element
+ 
+form.addEventListener("submit", (event) => {
+  const requiredFields = form.querySelectorAll("select[name]"); // Include all named form elements
+  let hasEmptyFields = false;
+ 
+  for (const field of requiredFields) {
+    if (field.value.trim() === "") {
+      hasEmptyFields = true;
+      break; // Stop iterating if an empty field is found (optional)
+    }
+  }
+ 
+  if (hasEmptyFields) {
+errorMessage.style.display = "block"; // Show the error message
+  } else {
+    // Allow form submission if validation passes
+    // event.preventDefault(); // Remove if not needed
+  }
+ 
+  // Optionally, focus on the first empty field
+});
+  </script>
+
+
+ 
+  
+    <style>
+      .button-container {
+        text-align: right;
+      }
+      
+    </style>
+    <div style="background-color: #3f51b5;" width="100">  
+      <footer id="footer" style="background-color:#3f51b5;">
+      <img src="https://www.tcs.com/content/dam/global-tcs/en/images/home/tcs-logo-1.svg" alt="tcslogo" class="bottomimage">
+      ©2024 TATA Consultancy Services Limited
+   </footer></div>
+   
+  </body>
+</html>
