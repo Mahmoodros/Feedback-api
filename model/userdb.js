@@ -9,7 +9,7 @@ const userSchema = new Schema({
     onsiteSquadLead: { type: String, required: true },
     offshoreSquadLead: { type: String, required: true },
     scrumMaster:{type:String,required:true}
-  }],
+  }], 
 });
  
 export const User = model("User", userSchema); 

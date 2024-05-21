@@ -5,7 +5,7 @@ const port =process.env.port||3000;
 dotenv.config();
 
 // Connect to MongoDB
-connect(process.env.mongo||"mongodb+srv://mahamoodroshan:7q7GuUX1XA6wNWxy@login-cluster.5lsj4pt.mongodb.net/", {
+connect(process.env.mongo||"mongodb+srv://mahamoodroshan:7q7GuUX1XA6wNWxy@login-cluster.5lsj4pt.mongodb.net/feedback_app", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
