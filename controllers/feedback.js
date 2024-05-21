@@ -221,19 +221,20 @@ export const submitFeedback = async (req, res) => {
   }
 };
 
-export const downloadFeedback = async (req, res) => {
-  const squadName = req.session.squadName;
-  const username = req.session.username;
 
-
-  try {
-      const feedback = await Feedback.findOne({
-          username: new RegExp(`^${username}$`, 'i'),
-      });
-
-      if (!feedback) {
-          return res.status(404).send("Feedback not found");
-      }
+    export const downloadFeedback = async (req, res) => {
+       const squadName = req.session.squadName;
+       const username = req.session.username;
+    
+       try {
+           const feedback = await Feedback.findOne({
+               username: new RegExp(`^${username}$`, 'i'),
+           });
+    
+           if (!feedback) {
+               return res.status(404).send("Feedback not found");
+           }
+           
       const technicalRating = convertToNumericRating(feedback.technicalFeedback);
       const domainRating = convertToNumericRating(feedback.domainFeedback);
       const activeParticipationRating = convertToNumericRating(feedback.
@@ -278,44 +279,42 @@ export const downloadFeedback = async (req, res) => {
         13;
       
       const averagePercentage = ((averageRating / 5) * 100).toFixed(2);
-      // Create a new workbook and worksheet
-           // Create an HTML table with the feedback data
-      const tableData = `
-           <table border="1">
-               <tr><th>Username</th><td>${feedback.username}</td></tr>
-               <tr><th>Technical Feedback</th><td>${feedback.technicalFeedback}</td></tr>
-               <tr><th>Technical Feedback Remarks</th><td>${feedback.technicalFeedbackRemarks}</td></tr>
-               <tr><th>Domain Feedback</th><td>${feedback.domainFeedback}</td></tr>
-               <tr><th>Domain Feedback Remarks</th><td>${feedback.domainFeedbackRemarks}</td></tr>
-               <tr><th>Active Participation Feedback</th><td>${feedback.activeParticipationFeedback}</td></tr>
-               <tr><th>Active Participation Feedback Remarks</th><td>${feedback.activeParticipationFeedbackRemarks}</td></tr>
-               <tr><th>Responsiveness to User Feedback</th><td>${feedback.ResponsivenesstouserFeedback}</td></tr>
-               <tr><th>Responsiveness to User Feedback Remarks</th><td>${feedback.ResponsivenesstouserFeedbackRemarks}</td></tr>
-               <tr><th>Solutioning Quality Feedback</th><td>${feedback.solutioningQualityFeedback}</td></tr>
-               <tr><th>Solutioning Quality Feedback Remarks</th><td>${feedback.solutioningQualityFeedbackRemarks}</td></tr>
-               <tr><th>Documentation Quality Feedback</th><td>${feedback.documentationQualityFeedback}</td></tr>
-               <tr><th>Documentation Quality Feedback Remarks</th><td>${feedback.documentationQualityFeedbackRemarks}</td></tr>
-               <tr><th>Test Coverage Quality Feedback</th><td>${feedback.testCoverageQualityFeedback}</td></tr>
-               <tr><th>Test Coverage Quality Feedback Remarks</th><td>${feedback.testCoverageQualityFeedbackRemarks}</td></tr>
-               <tr><th>Testing Quality Feedback</th><td>${feedback.testingQualityFeedback}</td></tr>
-               <tr><th>Testing Quality Feedback Remarks</th><td>${feedback.testingQualityFeedbackRemarks}</td></tr>
-               <tr><th>Post Production Issues Defects Feedback</th><td>${feedback.postProductionIssuesDefectsFeedback}</td></tr>
-               <tr><th>Post Production Issues Defects Feedback Remarks</th><td>${feedback.postProductionIssuesDefectsFeedbackRemarks}</td></tr>
-               <tr><th>Contribution by Squad Lead Feedback</th><td>${feedback.contributionbySquadLeadFeedback}</td></tr>
-               <tr><th>Contribution by Squad Lead Feedback Remarks</th><td>${feedback.contributionbySquadLeadFeedbackRemarks}</td></tr>
-               <tr><th>Work as Team Feedback</th><td>${feedback.workasTeamFeedback}</td></tr>
-               <tr><th>Work as Team Feedback Remarks</th><td>${feedback.workasTeamFeedbackRemarks}</td></tr>
-               <tr><th>Understanding Feedback</th><td>${feedback.understandingFeedback}</td></tr>
-               <tr><th>Understanding Feedback Remarks</th><td>${feedback.understandingFeedbackRemarks}</td></tr>
-               <tr><th>Communication Feedback</th><td>${feedback.communicationFeedback}</td></tr>
-               <tr><th>Communication Feedback Remarks</th><td>${feedback.communicationFeedbackRemarks}</td></tr>
-               <tr><th>Any Other Comments Feedback</th><td>${feedback.anyOtherCommentsFeedback}</td></tr>
-               <tr><th>Average Percentage</th><td>${averagePercentage}%</td></tr>
-           </table>`;
-           console.log(feedback);
-           res.setHeader('Content-Type', 'text/html');
-           res.setHeader('Content-Disposition', 'attachment; filename="feedback.html"');
-           res.send(tableData);
+           // Create a new workbook and worksheet
+           const workbook = new ExcelJS.Workbook();
+           const worksheet = workbook.addWorksheet('Feedback');
+    
+           // Define columns
+           worksheet.columns = [
+               { header: 'Field', key: 'field', width: 40 },
+               { header: 'Value', key: 'value', width: 40 },
+               { header:"Remarks", key:'remarks', width:40}
+           ];
+    
+           // Add rows
+           worksheet.addRows([
+               { field: 'Username', value: feedback.username },
+               { field: 'Technical Feedback', value: feedback.technicalFeedback, remarks: feedback.technicalFeedbackRemarks},
+               { field: 'Domain Feedback', value: feedback.domainFeedback, remarks: feedback.domainFeedbackRemarks },
+               { field: 'Active Participation Feedback', value: feedback.activeParticipationFeedback,remarks: feedback.activeParticipationFeedbackRemarks  },
+               { field: 'Responsiveness to User Feedback', value: feedback.ResponsivenesstouserFeedback,remarks: feedback.ResponsivenesstouserFeedbackRemarks },
+               { field: 'Solutioning Quality Feedback', value: feedback.solutioningQualityFeedback,remarks: feedback.solutioningQualityFeedbackRemarks },
+               { field: 'Documentation Quality Feedback', value: feedback.documentationQualityFeedback,remarks: feedback.documentationQualityFeedbackRemarks },
+               { field: 'Test Coverage Quality Feedback', value: feedback.testCoverageQualityFeedback,remarks: feedback.testCoverageQualityFeedbackRemarks },
+               { field: 'Testing Quality Feedback', value: feedback.testingQualityFeedback,remarks: feedback.testingQualityFeedbackRemarks  },
+               { field: 'Post Production Issues Defects Feedback', value: feedback.postProductionIssuesDefectsFeedback, remarks: feedback.postProductionIssuesDefectsFeedbackRemarks},
+               { field: 'Contribution by Squad Lead Feedback', value: feedback.contributionbySquadLeadFeedback,remarks: feedback.contributionbySquadLeadFeedbackRemarks },
+               { field: 'Work as Team Feedback', value: feedback.workasTeamFeedback,remarks: feedback.workasTeamFeedbackRemarks },
+               { field: 'Understanding Feedback', value: feedback.understandingFeedback,remarks: feedback.understandingFeedbackRemarks },
+               { field: 'Communication Feedback', value: feedback.communicationFeedback,remarks: feedback.communicationFeedbackRemarks },
+               { field: 'Any Other Comments Feedback', value: feedback.anyOtherCommentsFeedback },
+               { field: 'Average Percentage', value:averagePercentage },
+           ]);
+    
+           // Write to buffer and send response
+           const buffer = await workbook.xlsx.writeBuffer();
+           res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+           res.setHeader('Content-Disposition', 'attachment; filename="feedback.xlsx"');
+           res.send(buffer);
        } catch (error) {
            console.error(error);
            res.status(500).send("Internal Server Error");
