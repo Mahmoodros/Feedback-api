@@ -140,7 +140,8 @@ export const submitFeedback = async (req, res) => {
     understandingRating,
     communicationRating
   );
-  const averagePercentage = (averageRating / 5) * 100;
+  const average =(averageRating / 5) * 100;
+  const averagePercentage=average.toFixed(2)
   const dataSent = new Feedback({
     username,
     squadName,
@@ -205,9 +206,7 @@ export const submitFeedback = async (req, res) => {
           <div class="front" style="background-color:3f51b5">
           <img src="https://www.tcs.com/content/dam/global-tcs/en/images/home/tcs-logo-1.svg" alt="tcs logo" class="image2">
         </div>
-        <h2 style="text-align: center;">Your satisfaction index for ${squadName} is: ${averagePercentage.toFixed(
-      2
-    )}%</h2>
+        <h2 style="text-align: center;">Your satisfaction index for ${squadName} is: ${averagePercentage}%</h2>
           </form>
           <form action="/download-feedback" method="GET">
           <button type="submit" style="margin-left:45%;background-color:4caf50;color:white">Download Feedback</button>
@@ -220,103 +219,64 @@ export const submitFeedback = async (req, res) => {
     // Handle the error gracefully
   }
 };
-
-
-    export const downloadFeedback = async (req, res) => {
-       const squadName = req.session.squadName;
-       const username = req.session.username;
+ 
+ 
+export const downloadFeedback = async (req, res) => {
+  const username = req.session.username;
+ const squadName=req.session.squadName
+  console.log("Session Username:", username); // Debugging statement
+ 
+  try {
+    if (!username) {
+      return res.status(400).send("Username is missing from session");
+    }
+ 
+    const feedback = await Feedback.findOne({ username,squadName }).sort({createdAt:-1});
     
-       try {
-           const feedback = await Feedback.findOne({
-               username: new RegExp(`^${username}$`, 'i'),
-           });
-    
-           if (!feedback) {
-               return res.status(404).send("Feedback not found");
-           }
-           
-      const technicalRating = convertToNumericRating(feedback.technicalFeedback);
-      const domainRating = convertToNumericRating(feedback.domainFeedback);
-      const activeParticipationRating = convertToNumericRating(feedback.
-        activeParticipationFeedback
-      );
-      const ResponsivenesstouserRating = convertToNumericRating(feedback.
-        ResponsivenesstouserFeedback
-      );
-      const solutioningQualityRating = convertToNumericRating(feedback.
-        solutioningQualityFeedback
-      );
-      const documentationQualityRating = convertToNumericRating(feedback.
-        documentationQualityFeedback
-      );
-      const testCoverageQualityRating = convertToNumericRating(feedback.
-        testCoverageQualityFeedback
-      );
-      const testingQualityRating = convertToNumericRating(feedback.testingQualityFeedback);
-      const postProductionIssuesDefectsRating = convertToNumericRating(feedback.
-        postProductionIssuesDefectsFeedback
-      );
-      const contributionbySquadLeadRating = convertToNumericRating(feedback.
-        contributionbySquadLeadFeedback
-      );
-      const workAsaTeamRating = convertToNumericRating(feedback.workasTeamFeedback);
-      const understandingRating = convertToNumericRating(feedback.understandingFeedback);
-      const communicationRating = convertToNumericRating(feedback.communicationFeedback);
-      const averageRating =
-        (technicalRating +
-          domainRating +
-          activeParticipationRating +
-          ResponsivenesstouserRating +
-          solutioningQualityRating +
-          documentationQualityRating +
-          testCoverageQualityRating +
-          testingQualityRating +
-          postProductionIssuesDefectsRating +
-          contributionbySquadLeadRating +
-          workAsaTeamRating +
-          understandingRating +
-          communicationRating) /
-        13;
-      
-      const averagePercentage = ((averageRating / 5) * 100).toFixed(2);
-           // Create a new workbook and worksheet
-           const workbook = new ExcelJS.Workbook();
-           const worksheet = workbook.addWorksheet('Feedback');
-    
-           // Define columns
-           worksheet.columns = [
-               { header: 'Field', key: 'field', width: 40 },
-               { header: 'Value', key: 'value', width: 40 },
-               { header:"Remarks", key:'remarks', width:40}
-           ];
-    
-           // Add rows
-           worksheet.addRows([
-               { field: 'Username', value: feedback.username },
-               { field: 'Technical Feedback', value: feedback.technicalFeedback, remarks: feedback.technicalFeedbackRemarks},
-               { field: 'Domain Feedback', value: feedback.domainFeedback, remarks: feedback.domainFeedbackRemarks },
-               { field: 'Active Participation Feedback', value: feedback.activeParticipationFeedback,remarks: feedback.activeParticipationFeedbackRemarks  },
-               { field: 'Responsiveness to User Feedback', value: feedback.ResponsivenesstouserFeedback,remarks: feedback.ResponsivenesstouserFeedbackRemarks },
-               { field: 'Solutioning Quality Feedback', value: feedback.solutioningQualityFeedback,remarks: feedback.solutioningQualityFeedbackRemarks },
-               { field: 'Documentation Quality Feedback', value: feedback.documentationQualityFeedback,remarks: feedback.documentationQualityFeedbackRemarks },
-               { field: 'Test Coverage Quality Feedback', value: feedback.testCoverageQualityFeedback,remarks: feedback.testCoverageQualityFeedbackRemarks },
-               { field: 'Testing Quality Feedback', value: feedback.testingQualityFeedback,remarks: feedback.testingQualityFeedbackRemarks  },
-               { field: 'Post Production Issues Defects Feedback', value: feedback.postProductionIssuesDefectsFeedback, remarks: feedback.postProductionIssuesDefectsFeedbackRemarks},
-               { field: 'Contribution by Squad Lead Feedback', value: feedback.contributionbySquadLeadFeedback,remarks: feedback.contributionbySquadLeadFeedbackRemarks },
-               { field: 'Work as Team Feedback', value: feedback.workasTeamFeedback,remarks: feedback.workasTeamFeedbackRemarks },
-               { field: 'Understanding Feedback', value: feedback.understandingFeedback,remarks: feedback.understandingFeedbackRemarks },
-               { field: 'Communication Feedback', value: feedback.communicationFeedback,remarks: feedback.communicationFeedbackRemarks },
-               { field: 'Any Other Comments Feedback', value: feedback.anyOtherCommentsFeedback },
-               { field: 'Average Percentage', value:averagePercentage },
-           ]);
-    
-           // Write to buffer and send response
-           const buffer = await workbook.xlsx.writeBuffer();
-           res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-           res.setHeader('Content-Disposition', 'attachment; filename="feedback.xlsx"');
-           res.send(buffer);
-       } catch (error) {
-           console.error(error);
-           res.status(500).send("Internal Server Error");
-       }
-   };
+    console.log("Feedback Found:", feedback); // Debugging statement
+ 
+    if (!feedback) {
+      return res.status(404).send("Feedback not found");
+    }
+ 
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Feedback');
+ 
+    worksheet.columns = [
+      { header: 'Field', key: 'field', width: 40 },
+      { header: 'Value', key: 'value', width: 40 },
+      { header:'Remarks',key:'remarks',width:40 }
+    ];
+ 
+    // Add rows with feedback details
+    worksheet.addRows([
+      { field: 'Username', value: feedback.username },
+      { field: 'Squadname', value: feedback.squadName },
+      { field: 'Technical Feedback', value: feedback.technicalFeedback, reamrks: feedback.technicalFeedbackRemarks },
+      { field: 'Domain Feedback', value: feedback.domainFeedback, remarks: feedback.domainFeedbackRemarks},
+      { field: 'Active Participation Feedback', value: feedback.activeParticipationFeedback,remarks: feedback.activeParticipationFeedbackRemarks },
+      { field: 'Responsiveness to User Feedback', value: feedback.ResponsivenesstouserFeedback,remarks: feedback.ResponsivenesstouserFeedbackRemarks },
+      { field: 'Solutioning Quality Feedback', value: feedback.solutioningQualityFeedback,remarks: feedback.solutioningQualityFeedbackRemarks },
+      { field: 'Documentation Quality Feedback', value: feedback.documentationQualityFeedback, remarks: feedback.documentationQualityFeedbackRemarks},
+      { field: 'Test Coverage Quality Feedback', value: feedback.testCoverageQualityFeedback, remarks: feedback.testCoverageQualityFeedbackRemarks}, 
+      { field: 'Testing Quality Feedback', value: feedback.testingQualityFeedback,remarks: feedback.testingQualityFeedbackRemarks },
+      { field: 'Post Production Issues Defects Feedback', value: feedback.postProductionIssuesDefectsFeedback,remarks: feedback.postProductionIssuesDefectsFeedbackRemarks },
+      { field: 'Contribution by Squad Lead Feedback', value: feedback.contributionbySquadLeadFeedback, remarks: feedback.contributionbySquadLeadFeedbackRemarks},
+      { field: 'Work as Team Feedback', value: feedback.workasTeamFeedback, remarks: feedback.workasTeamFeedbackRemarks },
+      { field: 'Understanding Feedback', value: feedback.understandingFeedback,remarks: feedback.understandingFeedbackRemarks },
+      { field: 'Communication Feedback', value: feedback.communicationFeedback, remarks: feedback.communicationFeedbackRemarks },
+      { field: 'Any Other Comments Feedback', value: feedback.anyOtherCommentsFeedback },
+      { field: 'Average Percentage',value:feedback.averagePercentage},
+    ]);
+    // Write to buffer and send response
+    const buffer = await workbook.xlsx.writeBuffer();
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename="feedback.xlsx"');
+    res.send(buffer);
+ 
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+  

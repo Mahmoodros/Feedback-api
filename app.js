@@ -12,9 +12,10 @@ const app = express();
 // Set up session middleware
 app.use(
   session({
-    secret: "your_secret_key",
+    secret: process.env.SESSION_SECRET||"your_secret_key",
     resave: false,
     saveUninitialized: true,
+    cookie:{secure:false}
   })
 );
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -32,7 +32,8 @@ const feedbackSchema = new Schema({
     communicationFeedback: {type:String,required:true},
     communicationFeedbackRemarks: {type:String},
     anyOtherCommentsFeedback: {type:String},
-    averagePercentage:{type:Number}
+    averagePercentage:{type:Number},
+    createdAt:{type:Date,default:Date.now}
   });
   export  const Feedback = model("Feedback", feedbackSchema);
  
