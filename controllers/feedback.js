@@ -250,7 +250,7 @@ export const downloadFeedback = async (req, res) => {
  
     worksheet.columns = [
       { header: 'Field', key: 'field', width: 40 },
-      { header: 'Value', key: 'value', width: 40,style: {alignment:{left}}}, 
+      { header: 'Value', key: 'value', width: 40}, 
       { header:'Remarks',key:'remarks',width:40 }
     ]; 
  
@@ -258,7 +258,6 @@ export const downloadFeedback = async (req, res) => {
     worksheet.addRows([
       { field: 'Username', value: feedback.username },
       { field: 'Squadname', value: feedback.squadName },
-      { field: 'Average Percentage',value:feedback.averagePercentage},
       { field: 'Technical Feedback', value: feedback.technicalFeedback, reamrks: feedback.technicalFeedbackRemarks },
       { field: 'Domain Feedback', value: feedback.domainFeedback, remarks: feedback.domainFeedbackRemarks},
       { field: 'Active Participation Feedback', value: feedback.activeParticipationFeedback,remarks: feedback.activeParticipationFeedbackRemarks },
@@ -273,8 +272,11 @@ export const downloadFeedback = async (req, res) => {
       { field: 'Understanding Feedback', value: feedback.understandingFeedback,remarks: feedback.understandingFeedbackRemarks },
       { field: 'Communication Feedback', value: feedback.communicationFeedback, remarks: feedback.communicationFeedbackRemarks },
       { field: 'Any Other Comments Feedback', value: feedback.anyOtherCommentsFeedback },
+      { field: 'Average Percentage',value: feedback.averagePercentage}
      
     ]);
+
+    worksheet.getCell('B3').alignment = { vertical: 'top', horizontal: 'left' };
     // Write to buffer and send response 
     const buffer = await workbook.xlsx.writeBuffer();
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
