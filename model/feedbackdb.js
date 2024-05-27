@@ -35,5 +35,6 @@ const feedbackSchema = new Schema({
     averagePercentage:{type:Number},
     createdAt:{type:Date,default:Date.now}
   });
+  feedbackSchema.index({ username: 1, squadName: 1 }, { unique: true });
   export  const Feedback = model("Feedback", feedbackSchema);
  

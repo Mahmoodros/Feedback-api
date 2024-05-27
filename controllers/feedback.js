@@ -18,7 +18,10 @@ export const getFeedbackForm = async (req, res) => {
     if (!user) {
       return res.status(404).send("User not found");
     }
-
+    const existingFeedback = await Feedback.findOne({ username, squadName: squad });
+    if (existingFeedback) {
+        return res.status(400).send("Feedback already submitted for this squad.");
+    }
     // Check if the user has only one squad
     if (user.squadDetails.length === 1) {
       // If user has only one squad, use that squad
@@ -27,6 +30,7 @@ export const getFeedbackForm = async (req, res) => {
       await req.session.save();
       return res.render("feedbackForm.ejs", { squadDetails: selectedSquad });
     }
+
 
     // Check if the selected squad exists for the user
     const selectedSquad = user.squadDetails.find((s) => s.squadName === squad);
@@ -81,6 +85,8 @@ export const submitFeedback = async (req, res) => {
     communicationFeedbackRemarks,
     anyOtherCommentsFeedback
   } = req.body;
+
+ 
   const squadname = req.session.squadName || null;
   console.log(req.body);
   const technicalRating = convertToNumericRating(technicalFeedback);
@@ -244,14 +250,15 @@ export const downloadFeedback = async (req, res) => {
  
     worksheet.columns = [
       { header: 'Field', key: 'field', width: 40 },
-      { header: 'Value', key: 'value', width: 40 },
+      { header: 'Value', key: 'value', width: 40,style: {alignment:{left}}}, 
       { header:'Remarks',key:'remarks',width:40 }
-    ];
+    ]; 
  
     // Add rows with feedback details
     worksheet.addRows([
       { field: 'Username', value: feedback.username },
       { field: 'Squadname', value: feedback.squadName },
+      { field: 'Average Percentage',value:feedback.averagePercentage},
       { field: 'Technical Feedback', value: feedback.technicalFeedback, reamrks: feedback.technicalFeedbackRemarks },
       { field: 'Domain Feedback', value: feedback.domainFeedback, remarks: feedback.domainFeedbackRemarks},
       { field: 'Active Participation Feedback', value: feedback.activeParticipationFeedback,remarks: feedback.activeParticipationFeedbackRemarks },
@@ -266,9 +273,9 @@ export const downloadFeedback = async (req, res) => {
       { field: 'Understanding Feedback', value: feedback.understandingFeedback,remarks: feedback.understandingFeedbackRemarks },
       { field: 'Communication Feedback', value: feedback.communicationFeedback, remarks: feedback.communicationFeedbackRemarks },
       { field: 'Any Other Comments Feedback', value: feedback.anyOtherCommentsFeedback },
-      { field: 'Average Percentage',value:feedback.averagePercentage},
+     
     ]);
-    // Write to buffer and send response
+    // Write to buffer and send response 
     const buffer = await workbook.xlsx.writeBuffer();
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', 'attachment; filename="feedback.xlsx"');
