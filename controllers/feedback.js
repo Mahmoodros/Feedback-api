@@ -18,7 +18,7 @@ export const getFeedbackForm = async (req, res) => {
     if (!user) {
       return res.status(404).send("User not found");
     }
-    const existingFeedback = await Feedback.findOne({ username, squadName: squad });
+    const existingFeedback = await Feedback.findOne({username: new RegExp(`^${username}$`, "i"), squadName: squad });
     if (existingFeedback) {
         return res.status(400).send("Feedback already submitted for this squad.");
     }
