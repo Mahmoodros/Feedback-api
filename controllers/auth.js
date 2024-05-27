@@ -78,7 +78,7 @@ export const handleLogin = async (req, res) => {
       res.end();
       
  
-  } else  if (username === 'lakshmi') {
+  } else  if (user.username.toLowerCase() === 'lakshmi') {
                 const feedbacks = await Feedback.find({});
  
                 // Generate HTML table
