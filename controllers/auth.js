@@ -24,7 +24,7 @@ export const handleLogin = async (req, res) => {
   } else if (user.squadDetails.length > 1) {
       const script = `
           <style>
-              .modal {
+              .modal { 
                   display: block;
                   position: fixed;
                   z-index: 1;
@@ -78,7 +78,7 @@ export const handleLogin = async (req, res) => {
       res.end();
       
  
-  } else  if (user.username.toLowerCase() === 'lakshmi') {
+  } else  if (user.username.toLowerCase()=== 'lakshmi') {
                 const feedbacks = await Feedback.find({});
  
                 // Generate HTML table

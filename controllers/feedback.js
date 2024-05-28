@@ -1,7 +1,7 @@
 import { User } from "../model/userdb.js";
 import { Feedback } from "../model/feedbackdb.js";
 import { convertToNumericRating } from "../util/ratingFunction.js";
-import ExcelJS from 'exceljs';
+import ExcelJS from "exceljs";
 
 export const getFeedbackForm = async (req, res) => {
   const { squad } = req.query;
@@ -18,9 +18,12 @@ export const getFeedbackForm = async (req, res) => {
     if (!user) {
       return res.status(404).send("User not found");
     }
-    const existingFeedback = await Feedback.findOne({username: new RegExp(`^${username}$`, "i"), squadName: squad });
+    const existingFeedback = await Feedback.findOne({
+      username: new RegExp(`^${username}$`, "i"),
+      squadName: squad,
+    });
     if (existingFeedback) {
-        return res.status(400).send("Feedback already submitted for this squad.");
+      return res.status(400).send("Feedback already submitted for this squad.");
     }
     // Check if the user has only one squad
     if (user.squadDetails.length === 1) {
@@ -30,7 +33,6 @@ export const getFeedbackForm = async (req, res) => {
       await req.session.save();
       return res.render("feedbackForm.ejs", { squadDetails: selectedSquad });
     }
-
 
     // Check if the selected squad exists for the user
     const selectedSquad = user.squadDetails.find((s) => s.squadName === squad);
@@ -83,10 +85,9 @@ export const submitFeedback = async (req, res) => {
     understandingFeedbackRemarks,
     communicationFeedback,
     communicationFeedbackRemarks,
-    anyOtherCommentsFeedback
+    anyOtherCommentsFeedback,
   } = req.body;
 
- 
   const squadname = req.session.squadName || null;
   console.log(req.body);
   const technicalRating = convertToNumericRating(technicalFeedback);
@@ -146,8 +147,8 @@ export const submitFeedback = async (req, res) => {
     understandingRating,
     communicationRating
   );
-  const average =(averageRating / 5) * 100;
-  const averagePercentage=average.toFixed(2)
+  const average = (averageRating / 5) * 100;
+  const averagePercentage = average.toFixed(2);
   const dataSent = new Feedback({
     username,
     squadName,
@@ -178,7 +179,7 @@ export const submitFeedback = async (req, res) => {
     understandingFeedbackRemarks,
     communicationFeedback,
     communicationFeedbackRemarks,
-    anyOtherCommentsFeedback
+    anyOtherCommentsFeedback,
   });
   try {
     await dataSent.save();
@@ -225,67 +226,129 @@ export const submitFeedback = async (req, res) => {
     // Handle the error gracefully
   }
 };
- 
- 
+
 export const downloadFeedback = async (req, res) => {
   const username = req.session.username;
- const squadName=req.session.squadName
+  const squadName = req.session.squadName;
   console.log("Session Username:", username); // Debugging statement
- 
+
   try {
     if (!username) {
       return res.status(400).send("Username is missing from session");
     }
- 
-    const feedback = await Feedback.findOne({ username,squadName }).sort({createdAt:-1});
-    
+
+    const feedback = await Feedback.findOne({ username, squadName }).sort({
+      createdAt: -1,
+    });
+
     console.log("Feedback Found:", feedback); // Debugging statement
- 
+
     if (!feedback) {
       return res.status(404).send("Feedback not found");
     }
- 
+
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Feedback');
- 
+    const worksheet = workbook.addWorksheet("Feedback");
+
     worksheet.columns = [
-      { header: 'Field', key: 'field', width: 40 },
-      { header: 'Value', key: 'value', width: 40}, 
-      { header:'Remarks',key:'remarks',width:40 }
-    ]; 
- 
+      { header: "Field", key: "field", width: 40 },
+      { header: "Value", key: "value", width: 40 },
+      { header: "", key: "remarks", width: 40 },
+    ];
+
     // Add rows with feedback details
     worksheet.addRows([
-      { field: 'Username', value: feedback.username },
-      { field: 'Squadname', value: feedback.squadName },
-      { field: 'Technical Feedback', value: feedback.technicalFeedback, reamrks: feedback.technicalFeedbackRemarks },
-      { field: 'Domain Feedback', value: feedback.domainFeedback, remarks: feedback.domainFeedbackRemarks},
-      { field: 'Active Participation Feedback', value: feedback.activeParticipationFeedback,remarks: feedback.activeParticipationFeedbackRemarks },
-      { field: 'Responsiveness to User Feedback', value: feedback.ResponsivenesstouserFeedback,remarks: feedback.ResponsivenesstouserFeedbackRemarks },
-      { field: 'Solutioning Quality Feedback', value: feedback.solutioningQualityFeedback,remarks: feedback.solutioningQualityFeedbackRemarks },
-      { field: 'Documentation Quality Feedback', value: feedback.documentationQualityFeedback, remarks: feedback.documentationQualityFeedbackRemarks},
-      { field: 'Test Coverage Quality Feedback', value: feedback.testCoverageQualityFeedback, remarks: feedback.testCoverageQualityFeedbackRemarks}, 
-      { field: 'Testing Quality Feedback', value: feedback.testingQualityFeedback,remarks: feedback.testingQualityFeedbackRemarks },
-      { field: 'Post Production Issues Defects Feedback', value: feedback.postProductionIssuesDefectsFeedback,remarks: feedback.postProductionIssuesDefectsFeedbackRemarks },
-      { field: 'Contribution by Squad Lead Feedback', value: feedback.contributionbySquadLeadFeedback, remarks: feedback.contributionbySquadLeadFeedbackRemarks},
-      { field: 'Work as Team Feedback', value: feedback.workasTeamFeedback, remarks: feedback.workasTeamFeedbackRemarks },
-      { field: 'Understanding Feedback', value: feedback.understandingFeedback,remarks: feedback.understandingFeedbackRemarks },
-      { field: 'Communication Feedback', value: feedback.communicationFeedback, remarks: feedback.communicationFeedbackRemarks },
-      { field: 'Any Other Comments Feedback', value: feedback.anyOtherCommentsFeedback },
-      { field: 'Average Percentage',value: feedback.averagePercentage}
-     
+      { field: "Username", value: feedback.username },
+      { field: "Squadname", value: feedback.squadName },
+      { field: "", value: "" },
+      { field: "", value: "" },
+      { field: "Feedbacks", value: "value", remarks: "Remarks" },
+      {
+        field: "Technical Feedback",
+        value: feedback.technicalFeedback,
+        reamrks: feedback.technicalFeedbackRemarks,
+      },
+      {
+        field: "Domain Feedback",
+        value: feedback.domainFeedback,
+        remarks: feedback.domainFeedbackRemarks,
+      },
+      {
+        field: "Active Participation Feedback",
+        value: feedback.activeParticipationFeedback,
+        remarks: feedback.activeParticipationFeedbackRemarks,
+      },
+      {
+        field: "Responsiveness to User Feedback",
+        value: feedback.ResponsivenesstouserFeedback,
+        remarks: feedback.ResponsivenesstouserFeedbackRemarks,
+      },
+      {
+        field: "Solutioning Quality Feedback",
+        value: feedback.solutioningQualityFeedback,
+        remarks: feedback.solutioningQualityFeedbackRemarks,
+      },
+      {
+        field: "Documentation Quality Feedback",
+        value: feedback.documentationQualityFeedback,
+        remarks: feedback.documentationQualityFeedbackRemarks,
+      },
+      {
+        field: "Test Coverage Quality Feedback",
+        value: feedback.testCoverageQualityFeedback,
+        remarks: feedback.testCoverageQualityFeedbackRemarks,
+      },
+      {
+        field: "Testing Quality Feedback",
+        value: feedback.testingQualityFeedback,
+        remarks: feedback.testingQualityFeedbackRemarks,
+      },
+      {
+        field: "Post Production Issues Defects Feedback",
+        value: feedback.postProductionIssuesDefectsFeedback,
+        remarks: feedback.postProductionIssuesDefectsFeedbackRemarks,
+      },
+      {
+        field: "Contribution by Squad Lead Feedback",
+        value: feedback.contributionbySquadLeadFeedback,
+        remarks: feedback.contributionbySquadLeadFeedbackRemarks,
+      },
+      {
+        field: "Work as Team Feedback",
+        value: feedback.workasTeamFeedback,
+        remarks: feedback.workasTeamFeedbackRemarks,
+      },
+      {
+        field: "Understanding Feedback",
+        value: feedback.understandingFeedback,
+        remarks: feedback.understandingFeedbackRemarks,
+      },
+      {
+        field: "Communication Feedback",
+        value: feedback.communicationFeedback,
+        remarks: feedback.communicationFeedbackRemarks,
+      },
+      {
+        field: "Any Other Comments Feedback",
+        value: feedback.anyOtherCommentsFeedback,
+      },
+      { field: "Average Percentage", value: feedback.averagePercentage },
     ]);
 
-    worksheet.getCell('B3').alignment = { vertical: 'top', horizontal: 'left' };
-    // Write to buffer and send response 
+    worksheet.getCell("B3").alignment = { vertical: "top", horizontal: "left" };
+    // Write to buffer and send response
     const buffer = await workbook.xlsx.writeBuffer();
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', 'attachment; filename="feedback.xlsx"');
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="feedback.xlsx"'
+    );
     res.send(buffer);
- 
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 };
-  
