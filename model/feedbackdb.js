@@ -3,6 +3,9 @@ const { Schema, model } = mongoose;
 const feedbackSchema = new Schema({
     username:{type:String,required:true},
     squadName:{type:String},
+    scrumMaster:{type:String},
+    onsiteSquadLead:{type:String},
+    offshoreSquadLead:{type:String},
     technicalFeedback: {type:String,required:true},
     technicalFeedbackRemarks:{type:String},
     domainFeedback: {type:String,required:true},

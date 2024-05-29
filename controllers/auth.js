@@ -78,189 +78,11 @@ export const handleLogin = async (req, res) => {
       res.end();
       
  
-  } else  if (user.username.toLowerCase()=== 'lakshmi') {
-                const feedbacks = await Feedback.find({});
- 
-                // Generate HTML table
-                let htmlTable = `
-                    <html>
-                    <head>
-                        <title>Feedback Details</title>
-                        <style>
-                            table {
-                                width: 100%;
-                                border-collapse: collapse;
-                                margin-bottom: 20px;
-                            }
-                            table, th, td {
-                                border: 1px solid black;
-                            }
-                            th, td {
-                                padding: 8px;
-                                text-align: left;
-                            }
-                            th {
-                                background-color: #f2f2f2;
-                                width: 30%;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <h2>Feedback Details</h2>
-                `;
- 
-                feedbacks.forEach(feedback => {
-                    const technicalRating = convertToNumericRating(feedback.technicalFeedback);
-                    const domainRating = convertToNumericRating(feedback.domainFeedback);
-                    const activeParticipationRating = convertToNumericRating(feedback.activeParticipationFeedback);
-                    const ResponsivenesstouserRating = convertToNumericRating(feedback.ResponsivenesstouserFeedback);
-                    const solutioningQualityRating = convertToNumericRating(feedback.solutioningQualityFeedback);
-                    const documentationQualityRating = convertToNumericRating(feedback.documentationQualityFeedback);
-                    const testCoverageQualityRating = convertToNumericRating(feedback.testCoverageQualityFeedback);
-                    const testingQualityRating = convertToNumericRating(feedback.testingQualityFeedback);
-                    const postProductionIssuesDefectsRating = convertToNumericRating(feedback.postProductionIssuesDefectsFeedback);
-                    const contributionbySquadLeadRating = convertToNumericRating(feedback.contributionbySquadLeadFeedback);
-                    const workAsaTeamRating = convertToNumericRating(feedback.workasTeamFeedback);
-                    const understandingRating = convertToNumericRating(feedback.understandingFeedback);
-                    const communicationRating = convertToNumericRating(feedback.communicationFeedback);
- 
-                    const averageRating = (technicalRating + domainRating + activeParticipationRating + ResponsivenesstouserRating + solutioningQualityRating + documentationQualityRating + testCoverageQualityRating + testingQualityRating + postProductionIssuesDefectsRating + contributionbySquadLeadRating + workAsaTeamRating + understandingRating + communicationRating) / 13;
-                    const averagePercentage = (averageRating / 5) * 100;
- 
-                    htmlTable += `
-                        <table>
-                            <tr>
-                                <th>Username</th>
-                                <td>${feedback.username}</td>
-                            </tr>
-                            <tr>
-                                <th>Squad Name</th>
-                                <td>${feedback.squadName}</td>
-                            </tr>
-                            <tr>
-                                <th>Technical Feedback</th>
-                                <td>${feedback.technicalFeedback}</td>
-                            </tr>
-                            <tr>
-                                <th>Technical Feedback Remarks</th>
-                                <td>${feedback.technicalFeedbackRemarks}</td>
-                            </tr>
-                            <tr>
-                                <th>Domain Feedback</th>
-                                <td>${feedback.domainFeedback}</td>
-                            </tr>
-                            <tr>
-                                <th>Domain Feedback Remarks</th>
-                                <td>${feedback.domainFeedbackRemarks}</td>
-                            </tr>
-                            <tr>
-                                <th>Active Participation Feedback</th>
-                                <td>${feedback.activeParticipationFeedback}</td>
-                            </tr>
-                            <tr>
-                                <th>Active Participation Feedback Remarks</th>
-                                <td>${feedback.activeParticipationFeedbackRemarks}</td>
-                            </tr>
-                            <tr>
-                                <th>Responsiveness to User Feedback</th>
-                                <td>${feedback.ResponsivenesstouserFeedback}</td>
-                            </tr>
-                            <tr>
-                                <th>Responsiveness to User Feedback Remarks</th>
-                                <td>${feedback.ResponsivenesstouserFeedbackRemarks}</td>
-                            </tr>
-                            <tr>
-                                <th>Solutioning Quality Feedback</th>
-                                <td>${feedback.solutioningQualityFeedback}</td>
-                            </tr>
-                            <tr>
-                                <th>Solutioning Quality Feedback Remarks</th>
-                                <td>${feedback.solutioningQualityFeedbackRemarks}</td>
-                            </tr>
-                            <tr>
-                                <th>Documentation Quality Feedback</th>
-                                <td>${feedback.documentationQualityFeedback}</td>
-                            </tr>
-                            <tr>
-                                <th>Documentation Quality Feedback Remarks</th>
-                                <td>${feedback.documentationQualityFeedbackRemarks}</td>
-                            </tr>
-                            <tr>
-                                <th>Test Coverage Quality Feedback</th>
-                                <td>${feedback.testCoverageQualityFeedback}</td>
-                            </tr>
-                            <tr>
-                                <th>Test Coverage Quality Feedback Remarks</th>
-                                <td>${feedback.testCoverageQualityFeedbackRemarks}</td>
-                            </tr>
-                            <tr>
-                                <th>Testing Quality Feedback</th>
-                                <td>${feedback.testingQualityFeedback}</td>
-                            </tr>
-                            <tr>
-                                <th>Testing Quality Feedback Remarks</th>
-                                <td>${feedback.testingQualityFeedbackRemarks}</td>
-                            </tr>
-                            <tr>
-                                <th>Post Production Issues Defects Feedback</th>
-                                <td>${feedback.postProductionIssuesDefectsFeedback}</td>
-                            </tr>
-                            <tr>
-                                <th>Post Production Issues Defects Feedback Remarks</th>
-                                <td>${feedback.postProductionIssuesDefectsFeedbackRemarks}</td>
-                            </tr>
-                            <tr>
-                                <th>Contribution by Squad Lead Feedback</th>
-                                <td>${feedback.contributionbySquadLeadFeedback}</td>
-                            </tr>
-                            <tr>
-                                <th>Contribution by Squad Lead Feedback Remarks</th>
-                                <td>${feedback.contributionbySquadLeadFeedbackRemarks}</td>
-                            </tr>
-                            <tr>
-                                <th>Work as a Team Feedback</th>
-                                <td>${feedback.workasTeamFeedback}</td>
-                            </tr>
-                            <tr>
-                                <th>Work as a Team Feedback Remarks</th>
-                                <td>${feedback.workasTeamFeedbackRemarks}</td>
-                            </tr>
-                            <tr>
-                                <th>Understanding Feedback</th>
-                                <td>${feedback.understandingFeedback}</td>
-                            </tr>
-                            <tr>
-                                <th>Understanding Feedback Remarks</th>
-                                <td>${feedback.understandingFeedbackRemarks}</td>
-                            </tr>
-                            <tr>
-                                <th>Communication Feedback</th>
-                                <td>${feedback.communicationFeedback}</td>
-                            </tr>
-                            <tr>
-                                <th>Communication Feedback Remarks</th>
-                                <td>${feedback.communicationFeedbackRemarks}</td>
-                            </tr>
-                            <tr>
-                                <th>Any Other Comments Feedback</th>
-                                <td>${feedback.anyOtherCommentsFeedback}</td>
-                            </tr>
-                            <tr>
-                                <th>Average Percentage</th>
-                                <td>${averagePercentage.toFixed(2)}%</td>
-                            </tr>
-                        </table>
-                    `;
-                });
- 
-                htmlTable += `
-                    </body>
-                    </html>
-                `;
- 
-                // Send the HTML response
-                res.send(htmlTable);
-            }
+  } else if (user.username.toLowerCase() === 'lakshmi') {
+    const feedbacks = await Feedback.find({});
+    res.send(generateFeedbackHTML(feedbacks));
+    return;
+  }
   else{
     // Handle unexpected case (no squad data)
     console.error("User has no squad data:", user);
@@ -269,4 +91,134 @@ export const handleLogin = async (req, res) => {
   console.error(err);
   res.status(500).send("Internal Server Error");
 }
+};
+
+const generateFeedbackHTML = (feedbacks) => {
+  let html = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Feedbacks</title>
+      <style>
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        table, th, td {
+          border: 1px solid black;
+        }
+        th, td {
+          padding: 10px;
+          text-align: left;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+         
+        .left {
+            text-align: left;
+        }
+      
+      </style>
+    </head>
+    <body>
+      <h1>All Feedbacks</h1>
+      ${feedbacks.map(feedback => `
+        <h2>Feedback for ${feedback.squadName}</h2>
+        <div class="container">
+        <div class="left">
+            <p><strong>Squad Name: </strong>${feedback.squadName}</p>
+            <p><strong>Offshore Squad Lead: </strong> ${feedback.offshoreSquadLead}</p>
+        </div>
+        <div class="right">
+            <p><strong>Onsite Squad Lead: </strong> ${feedback.onsiteSquadLead}</p>
+            <p><strong>Scrum Master: </strong> ${feedback.scrumMaster}</p>
+        </div>
+        <p><strong>Average Percentage: </strong> ${feedback.averagePercentage}%</p>
+    </div>
+        <table>
+          <tr>
+            <th>Attributes</th>
+            <th>Feedback</th> 
+            <th>Remarks</th>
+          </tr>
+          <tr>
+            <td>Technical Knowledge</td>
+            <td>${feedback.technicalFeedback}</td>
+            <td>${feedback.technicalFeedbackRemarks}</td>
+          </tr>
+          <tr>
+            <td>Domain Knowledge</td>
+            <td>${feedback.domainFeedback}</td>
+            <td>${feedback.domainFeedbackRemarks}</td>
+          </tr>
+          <tr>
+            <td>Active Participation</td>
+            <td>${feedback.activeParticipationFeedback}</td>
+            <td>${feedback.activeParticipationFeedbackRemarks}</td>
+          </tr>
+          <tr>
+            <td>Responsiveness to Queries</td>
+            <td>${feedback.ResponsivenesstouserFeedback}</td>
+            <td>${feedback.ResponsivenesstouserFeedbackRemarks}</td>
+          </tr>
+          <tr>
+            <td>Solutioning Quality</td>
+            <td>${feedback.solutioningQualityFeedback}</td>
+            <td>${feedback.solutioningQualityFeedbackRemarks}</td>
+          </tr>
+          <tr>
+            <td>Documentation Quality</td>
+            <td>${feedback.documentationQualityFeedback}</td>
+            <td>${feedback.documentationQualityFeedbackRemarks}</td>
+          </tr>
+          <tr>
+            <td>Test Coverage Quality</td>
+            <td>${feedback.testCoverageQualityFeedback}</td>
+            <td>${feedback.testCoverageQualityFeedbackRemarks}</td>
+          </tr>
+          <tr>
+            <td>Testing Quality</td>
+            <td>${feedback.testingQualityFeedback}</td>
+            <td>${feedback.testingQualityFeedbackRemarks}</td>
+          </tr>
+          <tr>
+            <td>Post-Production Issues</td>
+            <td>${feedback.postProductionIssuesDefectsFeedback}</td>
+            <td>${feedback.postProductionIssuesDefectsFeedbackRemarks}</td>
+          </tr>
+          <tr>
+            <td>Contribution by Squad Lead</td>
+            <td>${feedback.contributionbySquadLeadFeedback}</td>
+            <td>${feedback.contributionbySquadLeadFeedbackRemarks}</td>
+          </tr>
+          <tr>
+            <td>Work as a Team</td>
+            <td>${feedback.workasTeamFeedback}</td>
+            <td>${feedback.workasTeamFeedbackRemarks}</td>
+          </tr>
+          <tr>
+            <td>Understanding</td>
+            <td>${feedback.understandingFeedback}</td>
+            <td>${feedback.understandingFeedbackRemarks}</td>
+          </tr>
+          <tr>
+            <td>Communication</td>
+            <td>${feedback.communicationFeedback}</td>
+            <td>${feedback.communicationFeedbackRemarks}</td>
+          </tr>
+          <tr>
+            <td>Any Other Comments</td>
+            <td colspan="2">${feedback.anyOtherCommentsFeedback}</td>
+          </tr>
+        </table>
+      `).join('')}
+    </body>
+    </html>
+  `;
+ 
+  return html;
 };

@@ -23,13 +23,16 @@ export const getFeedbackForm = async (req, res) => {
       squadName: squad,
     });
     if (existingFeedback) {
-      return res.status(400).send("Feedback already submitted for this squad.");
+      return res.status(400).send(`<h2 style="text-align: center;">Feedback already submitted for this squad.</h2>`);
     }
     // Check if the user has only one squad
     if (user.squadDetails.length === 1) {
       // If user has only one squad, use that squad
       const selectedSquad = user.squadDetails[0];
       req.session.squadName = squad;
+      req.session.scrumMaster=selectedSquad.scrumMaster;
+      req.session.onsiteSquadLead=selectedSquad.onsiteSquadLead;
+      req.session.offshoreSquadLead=selectedSquad.offshoreSquadLead;
       await req.session.save();
       return res.render("feedbackForm.ejs", { squadDetails: selectedSquad });
     }
@@ -42,6 +45,9 @@ export const getFeedbackForm = async (req, res) => {
 
     console.log("Selected Squad:", selectedSquad);
     req.session.squadName = squad;
+    req.session.scrumMaster=selectedSquad.scrumMaster;
+    req.session.onsiteSquadLead=selectedSquad.onsiteSquadLead;
+    req.session.offshoreSquadLead=selectedSquad.offshoreSquadLead;
     await req.session.save();
 
     // Render the feedback form with prepopulated squad details
@@ -54,7 +60,10 @@ export const getFeedbackForm = async (req, res) => {
 
 export const submitFeedback = async (req, res) => {
   const squadName = req.session.squadName;
-  console.log(squadName);
+  const scrumMaster=req.session.scrumMaster;
+  const offshoreSquadLead=req.session.offshoreSquadLead;
+  const onsiteSquadLead=req.session.onsiteSquadLead
+  console.log(squadName,scrumMaster,offshoreSquadLead,onsiteSquadLead);
 
   const { username } = req.session; // Retrieve username from session
   console.log(username);
@@ -152,6 +161,9 @@ export const submitFeedback = async (req, res) => {
   const dataSent = new Feedback({
     username,
     squadName,
+    scrumMaster,
+    onsiteSquadLead,
+    offshoreSquadLead,
     averagePercentage,
     technicalFeedback,
     technicalFeedbackRemarks,
@@ -230,6 +242,9 @@ export const submitFeedback = async (req, res) => {
 export const downloadFeedback = async (req, res) => {
   const username = req.session.username;
   const squadName = req.session.squadName;
+  const scrumMaster=req.session.scrumMaster;
+  const offshoreLead=req.session.offshoreSquadLead;
+  const onsiteLead=req.session.onsiteSquadLead;
   console.log("Session Username:", username); // Debugging statement
 
   try {
@@ -251,8 +266,8 @@ export const downloadFeedback = async (req, res) => {
     const worksheet = workbook.addWorksheet("Feedback");
 
     worksheet.columns = [
-      { header: "Field", key: "field", width: 40 },
-      { header: "Value", key: "value", width: 40 },
+      { header: "Squad Details", key: "field", width: 40,},
+      { header: "", key: "value", width: 40 },
       { header: "", key: "remarks", width: 40 },
     ];
 
@@ -260,82 +275,89 @@ export const downloadFeedback = async (req, res) => {
     worksheet.addRows([
       { field: "Username", value: feedback.username },
       { field: "Squadname", value: feedback.squadName },
+      { field: "ScrumMaster",value: feedback.scrumMaster },
+      { field: "OnsiteLead", value: feedback.onsiteSquadLead },
+      { field: "OffshoreLead", value: feedback.offshoreSquadLead },
       { field: "", value: "" },
       { field: "", value: "" },
-      { field: "Feedbacks", value: "value", remarks: "Remarks" },
+      { field: "Feedbacks", value: "Value", remarks: "Remarks" },
       {
-        field: "Technical Feedback",
+        field: "Technical ",
         value: feedback.technicalFeedback,
         reamrks: feedback.technicalFeedbackRemarks,
       },
       {
-        field: "Domain Feedback",
+        field: "Domain ",
         value: feedback.domainFeedback,
         remarks: feedback.domainFeedbackRemarks,
       },
       {
-        field: "Active Participation Feedback",
+        field: "Active Participation ",
         value: feedback.activeParticipationFeedback,
         remarks: feedback.activeParticipationFeedbackRemarks,
       },
       {
-        field: "Responsiveness to User Feedback",
+        field: "Responsiveness to User ",
         value: feedback.ResponsivenesstouserFeedback,
         remarks: feedback.ResponsivenesstouserFeedbackRemarks,
       },
       {
-        field: "Solutioning Quality Feedback",
+        field: "Solutioning Quality ",
         value: feedback.solutioningQualityFeedback,
         remarks: feedback.solutioningQualityFeedbackRemarks,
       },
       {
-        field: "Documentation Quality Feedback",
+        field: "Documentation Quality ",
         value: feedback.documentationQualityFeedback,
         remarks: feedback.documentationQualityFeedbackRemarks,
       },
       {
-        field: "Test Coverage Quality Feedback",
+        field: "Test Coverage Quality ",
         value: feedback.testCoverageQualityFeedback,
         remarks: feedback.testCoverageQualityFeedbackRemarks,
       },
       {
-        field: "Testing Quality Feedback",
+        field: "Testing Quality ",
         value: feedback.testingQualityFeedback,
         remarks: feedback.testingQualityFeedbackRemarks,
       },
       {
-        field: "Post Production Issues Defects Feedback",
+        field: "Post Production Issues Defects ",
         value: feedback.postProductionIssuesDefectsFeedback,
         remarks: feedback.postProductionIssuesDefectsFeedbackRemarks,
       },
       {
-        field: "Contribution by Squad Lead Feedback",
+        field: "Contribution by Squad Lead ",
         value: feedback.contributionbySquadLeadFeedback,
         remarks: feedback.contributionbySquadLeadFeedbackRemarks,
       },
       {
-        field: "Work as Team Feedback",
+        field: "Work as Team ",
         value: feedback.workasTeamFeedback,
         remarks: feedback.workasTeamFeedbackRemarks,
       },
       {
-        field: "Understanding Feedback",
+        field: "Understanding ",
         value: feedback.understandingFeedback,
         remarks: feedback.understandingFeedbackRemarks,
       },
       {
-        field: "Communication Feedback",
+        field: "Communication ",
         value: feedback.communicationFeedback,
         remarks: feedback.communicationFeedbackRemarks,
       },
       {
-        field: "Any Other Comments Feedback",
+        field: "Any Other Comments ",
         value: feedback.anyOtherCommentsFeedback,
       },
       { field: "Average Percentage", value: feedback.averagePercentage },
     ]);
 
-    worksheet.getCell("B3").alignment = { vertical: "top", horizontal: "left" };
+    worksheet.getCell('A1').font = {bold: true};
+    worksheet.getCell('A9').font = {bold: true};
+    worksheet.getCell('B9').font = {bold: true};
+    worksheet.getCell('C9').font = {bold: true};
+    
     // Write to buffer and send response
     const buffer = await workbook.xlsx.writeBuffer();
     res.setHeader(
